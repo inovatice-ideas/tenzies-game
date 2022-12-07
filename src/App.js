@@ -8,6 +8,8 @@ import Confetti from "react-confetti"
 export default function App() {
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
+    const [score, setScore] = React.useState(0)
+    const [bestscore, setBestscore] = React.useState([])
 
     React.useEffect(() => {
         const allHeld = dice.every(die => die.isHeld)
@@ -15,8 +17,26 @@ export default function App() {
         const sameValue = dice.every(die => die.value === firstvalue)
         if(allHeld && sameValue) {
             setTenzies(true)
+            if(bestscore) {
+                if(score < bestscore)
+                    setBestscore(score)
+            }
+            else {
+                setBestscore(score)
+            }
         }
     }, [dice])
+
+    React.useEffect(() => {
+        const bs = JSON.parse(localStorage.getItem('bestScore'))
+        if(bs) {
+            setBestscore(bs)
+        }
+    }, [])
+
+    React.useEffect(() => {
+        localStorage.setItem('bestScore', JSON.stringify(bestscore))
+    }, [bestscore])
 
     function generateNewDie() {
         return {
@@ -39,10 +59,12 @@ export default function App() {
             setDice(oldDice => oldDice.map(oldDie => 
                 oldDie.isHeld? oldDie : generateNewDie()
             ))
+            setScore(oldScore => oldScore+1)
         }
         else {
             setTenzies(false)
             setDice(allNewDice())
+            setScore(0)
         }
     }
 
@@ -67,7 +89,11 @@ export default function App() {
     return (
         <main className="main-body">
             {tenzies && <Confetti />}
-            <h1 className="title">Tenzies</h1>
+            <div className="title-score">
+                <h1 className="title">Tenzies</h1>
+                <h4 className="score">Score: {score}</h4>
+                <h4 className="best-score">Best Score: {bestscore}</h4>
+            </div>
             <p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
             <div className="die-container">
                 {diceElement}
