@@ -27,17 +27,6 @@ export default function App() {
         }
     }, [dice])
 
-    React.useEffect(() => {
-        const bs = JSON.parse(localStorage.getItem('bestScore'))
-        if(bs) {
-            setBestscore(bs)
-        }
-    }, [])
-
-    React.useEffect(() => {
-        localStorage.setItem('bestScore', JSON.stringify(bestscore))
-    }, [bestscore])
-
     function generateNewDie() {
         return {
             value: Math.ceil(Math.random() * 6), 
