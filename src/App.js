@@ -9,7 +9,7 @@ export default function App() {
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
     const [score, setScore] = React.useState(0)
-    const [bestscore, setBestscore] = React.useState([])
+    const [bestscore, setBestscore] = React.useState(0)
 
     React.useEffect(() => {
         const allHeld = dice.every(die => die.isHeld)
